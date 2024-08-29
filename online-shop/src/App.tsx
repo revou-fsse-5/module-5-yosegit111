@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage';
 import ProductListingPage from './pages/ProductListingPage';
 import ProductDetailPage from './pages/ProductDetailPage'; 
 import CartPage from './pages/CartPage';
+import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
@@ -24,6 +25,7 @@ const App: React.FC = () => {
             <Route path="/products/:id" element={<ProductDetailPage />} /> 
             <Route path="/cart" element={<CartPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
           </Routes>
         </main>
         <Footer />

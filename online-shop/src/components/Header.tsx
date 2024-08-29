@@ -38,11 +38,20 @@ const Header: React.FC = () => {
           >
             Cart
           </Link>
+          {!isLoggedIn && (
+            <Link 
+              to="/login" 
+              className="hover:text-primary" 
+              style={{ marginRight: '1rem' }} // Adds padding between links
+            >
+              Register or Log In
+            </Link>
+          )}
         </nav>
       </div>
       {isLoggedIn && (
         <div className="text-center mt-2">
-          <p>You are logged in, {user?.email}. If you wish to log out, <button onClick={handleLogout} className="text-blue-600 underline">log out here</button></p>
+          <p>You are logged in, {user?.email}. If you wish to <Link to="/" onClick={handleLogout} className="text-blue-600 underline">log out here</Link>.</p>
         </div>
       )}
       {!isLoggedIn && (
@@ -55,4 +64,3 @@ const Header: React.FC = () => {
 }
 
 export default Header;
-

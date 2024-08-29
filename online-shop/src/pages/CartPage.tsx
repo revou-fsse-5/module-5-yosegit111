@@ -1,4 +1,4 @@
-// src/pages/CartPage.tsx
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
@@ -100,4 +100,3 @@ const CartPage: React.FC = () => {
 };
 
 export default CartPage;
-

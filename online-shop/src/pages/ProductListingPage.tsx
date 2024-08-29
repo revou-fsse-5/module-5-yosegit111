@@ -168,4 +168,3 @@ const ProductListingPage: React.FC = () => {
 };
 
 export default ProductListingPage;
-

@@ -6,8 +6,8 @@ import * as Yup from 'yup';
 import { useAuth } from '../context/AuthContext';
 
 const LoginPage: React.FC = () => {
-  const navigate = useNavigate();
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   const validationSchema = Yup.object({
     email: Yup.string().email('Invalid email format').required('Required'),
@@ -20,13 +20,21 @@ const LoginPage: React.FC = () => {
       <Formik
         initialValues={{ email: '', password: '' }}
         validationSchema={validationSchema}
-        onSubmit={(values, { setSubmitting }) => {
-          setTimeout(() => {
-            login(values.email, values.password); 
+        onSubmit={async (values, { setSubmitting }) => {
+          try {
+            await login(values.email, values.password);
             alert('Login Success!');
             navigate('/cart'); // Redirect to cart page
+          } catch (error: any) {
+            if (error.message === 'User not found') {
+              alert('User not found, redirecting to registration page...');
+              navigate('/register'); // Redirect to register page
+            } else {
+              alert('Invalid email or password');
+            }
+          } finally {
             setSubmitting(false);
-          }, 1000);
+          }
         }}
       >
         {({ isSubmitting }) => (
@@ -47,6 +55,12 @@ const LoginPage: React.FC = () => {
           </Form>
         )}
       </Formik>
+      <button 
+        onClick={() => navigate('/register')}
+        className="w-full mt-4 bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700"
+      >
+        Register for new user
+      </button>
     </div>
   );
 };
