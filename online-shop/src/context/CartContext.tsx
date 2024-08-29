@@ -1,17 +1,14 @@
+// src/context/CartContext.tsx
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface Product {
   id: number;
   title: string;
   price: number;
-  images: string[]; // Adjust as per API response
+  images: string[];
 }
 
-interface CartItem {
-  id: number;
-  title: string;
-  price: number;
-  image: string;
+interface CartItem extends Product {
   quantity: number;
 }
 
@@ -20,13 +17,13 @@ interface CartContextType {
   addToCart: (product: Product) => void;
   removeFromCart: (id: number) => void;
   updateQuantity: (id: number, quantity: number) => void;
-  checkout: () => void;
+  clearCart: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 interface CartProviderProps {
-  children: ReactNode;
+  children: ReactNode; // Define the type for children prop
 }
 
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
@@ -34,22 +31,14 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
   const addToCart = (product: Product) => {
     setCartItems(prevItems => {
-      const itemIndex = prevItems.findIndex(item => item.id === product.id);
-      if (itemIndex > -1) {
-        const updatedItems = [...prevItems];
-        updatedItems[itemIndex].quantity += 1;
-        return updatedItems;
+      const existingItem = prevItems.find(item => item.id === product.id);
+      if (existingItem) {
+        return prevItems.map(item =>
+          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+        );
+      } else {
+        return [...prevItems, { ...product, quantity: 1 }];
       }
-      return [
-        ...prevItems,
-        {
-          id: product.id,
-          title: product.title,
-          price: product.price,
-          image: product.images[0], // Use the first image
-          quantity: 1,
-        },
-      ];
     });
   };
 
@@ -65,13 +54,12 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     );
   };
 
-  const checkout = () => {
-    alert('Checkout successfully!');
+  const clearCart = () => {
     setCartItems([]);
   };
 
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, updateQuantity, checkout }}>
+    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, updateQuantity, clearCart }}>
       {children}
     </CartContext.Provider>
   );
@@ -79,7 +67,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
 export const useCart = () => {
   const context = useContext(CartContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useCart must be used within a CartProvider');
   }
   return context;

@@ -1,14 +1,28 @@
+// src/pages/CartPage.tsx
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 
 const CartPage: React.FC = () => {
-  const { cartItems, removeFromCart, updateQuantity, checkout } = useCart();
+  const { cartItems, removeFromCart, updateQuantity, clearCart } = useCart();
+  const { isLoggedIn } = useAuth();
+  const navigate = useNavigate();
 
   const handleQuantityChange = (id: number, quantity: number) => {
     if (quantity <= 0) {
       removeFromCart(id);
     } else {
       updateQuantity(id, quantity);
+    }
+  };
+
+  const handleCheckout = () => {
+    if (!isLoggedIn) {
+      navigate('/login'); // Redirect to login page if not logged in
+    } else {
+      clearCart(); // Clear the cart
+      alert('Checkout is successful!');
     }
   };
 
@@ -34,7 +48,11 @@ const CartPage: React.FC = () => {
               {cartItems.map(item => (
                 <tr key={item.id}>
                   <td className="border p-2">
-                    <img src={item.image} alt={item.title} className="w-20 h-20 object-cover" />
+                  <img 
+    src={item.images[0]} // Use the first image from the array
+    alt={item.title} 
+    style={{ width: '5cm', height: '5cm' }}
+  />
                   </td>
                   <td className="border p-2">{item.title}</td>
                   <td className="border p-2">${item.price.toFixed(2)}</td>
@@ -66,9 +84,12 @@ const CartPage: React.FC = () => {
               ))}
             </tbody>
           </table>
+          <div className="mt-4 text-lg font-semibold">
+            Total Price: ${cartItems.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2)}
+          </div>
           <button
             className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-            onClick={checkout}
+            onClick={handleCheckout}
           >
             Checkout
           </button>
@@ -79,3 +100,4 @@ const CartPage: React.FC = () => {
 };
 
 export default CartPage;
+

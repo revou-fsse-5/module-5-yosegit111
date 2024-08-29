@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
+import { Link } from 'react-router-dom';
+import ProductDetailPage from './ProductDetailPage';
 
 interface Category {
   id: number;
@@ -12,6 +14,7 @@ interface Product {
   price: number;
   images: string[];
   category: Category;
+  description: string; // Added description field
 }
 
 const ProductListingPage: React.FC = () => {
@@ -92,7 +95,7 @@ const ProductListingPage: React.FC = () => {
       <h1 className="text-3xl font-bold mb-8 text-secondary">Our Products</h1>
 
       {/* Category Buttons */}
-      <div className="mb-8 flex justify-center space-x-4">
+      <div className="mb-8 flex justify-center" style={{ gap: '16px', marginBottom: '1cm' }}>
         <button
           className={`py-2 px-4 rounded ${selectedCategory === null ? 'bg-primary text-white' : 'bg-gray-200 text-secondary'}`}
           onClick={() => filterByCategory(null)}
@@ -104,6 +107,7 @@ const ProductListingPage: React.FC = () => {
             key={category.id}
             className={`py-2 px-4 rounded ${selectedCategory === category.id ? 'bg-primary text-white' : 'bg-gray-200 text-secondary'}`}
             onClick={() => filterByCategory(category.id)}
+            style={{ marginLeft: '8px', marginRight: '8px' }} // Inline margin styles
           >
             {category.name}
           </button>
@@ -111,7 +115,11 @@ const ProductListingPage: React.FC = () => {
       </div>
 
       {/* Product Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(4, 1fr)',
+        gap: '16px'
+      }}>
         {currentProducts.map((product) => (
           <div key={product.id} className="border border-secondary rounded-lg overflow-hidden shadow-lg bg-white p-4">
             <img
@@ -123,18 +131,28 @@ const ProductListingPage: React.FC = () => {
             />
             <h2 className="text-xl font-bold text-secondary mb-2">{product.title}</h2>
             <p className="text-primary font-semibold mb-4">${product.price}</p>
-            <button
-              className="w-full bg-primary text-white py-2 px-4 rounded hover:bg-secondary transition-colors duration-300"
-              onClick={() => addToCart(product)}
-            >
-              Add to Cart
-            </button>
+            <div className="flex" style={{ gap: '0.3cm' }}>
+              <button
+                className="w-full bg-primary text-white py-2 px-4 rounded hover:bg-secondary transition-colors duration-300"
+                onClick={() => {
+                  alert('Product is added to cart!');
+                  addToCart(product);
+                }}
+              >
+                Add to Cart
+              </button>
+              <Link to={`/products/${product.id}`}>
+                <button className="w-full bg-gray-800 text-white py-2 px-4 rounded hover:bg-gray-700 transition-colors duration-300">
+                  Show Details
+                </button>
+              </Link>
+            </div>
           </div>
         ))}
       </div>
 
       {/* Pagination Controls */}
-      <div className="mt-8 flex justify-center space-x-2">
+      <div className="mt-8 flex justify-center" style={{ gap: '8px' }}>
         {[...Array(totalPages)].map((_, index) => (
           <button
             key={index + 1}
@@ -150,3 +168,4 @@ const ProductListingPage: React.FC = () => {
 };
 
 export default ProductListingPage;
+

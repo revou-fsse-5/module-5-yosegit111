@@ -1,26 +1,25 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",                           // Specifies the target JavaScript version (ES6)
+    "module": "esnext",                        // Specifies the module system (ESNext for modern module support)
+    "jsx": "react-jsx",                        // Specifies the JSX code generation mode (React 17+)
+    "esModuleInterop": true,                   // Enables interoperability between CommonJS and ES Modules
+    "allowSyntheticDefaultImports": true,      // Allows default imports from modules with no default export
+    "skipLibCheck": true,                      // Skips type checking of declaration files
+    "strict": true,                            // Enables all strict type-checking options
+    "forceConsistentCasingInFileNames": true,  // Ensures consistent casing in file names
+    "noFallthroughCasesInSwitch": true,        // Prevents fallthrough cases in switch statements
+    "moduleResolution": "node",                // Resolves modules using Node.js resolution strategy
+    "resolveJsonModule": true,                 // Allows importing JSON modules
+    "isolatedModules": true,                   // Ensures all files can be safely transpiled independently
+    "noEmit": true,                            // Disables emitting of output files (useful for type checking only)
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx"
+    ]
   },
   "include": [
-    "src"
+    "src"                                      // Includes all files in the src directory
   ]
 }
