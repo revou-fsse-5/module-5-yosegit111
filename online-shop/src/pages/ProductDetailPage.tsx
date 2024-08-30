@@ -46,7 +46,6 @@ const ProductDetailPage: React.FC = () => {
           src={product.images[0]}
           alt={product.title}
           className="w-full md:w-1/2 h-80 object-cover mb-4 md:mb-0"
-          style={{ width: '15cm', height: '15cm' }}
         />
         <div className="md:ml-4">
           <h1 className="text-4xl font-bold mb-4">{product.title}</h1>

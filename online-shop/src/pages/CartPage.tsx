@@ -48,24 +48,23 @@ const CartPage: React.FC = () => {
               {cartItems.map(item => (
                 <tr key={item.id}>
                   <td className="border p-2">
-                  <img 
-    src={item.images[0]} // Use the first image from the array
-    alt={item.title} 
-    style={{ width: '5cm', height: '5cm' }}
-  />
+                    <img
+                      src={item.images[0]} // Use the first image from the array
+                      alt={item.title}
+                    />
                   </td>
                   <td className="border p-2">{item.title}</td>
                   <td className="border p-2">${item.price.toFixed(2)}</td>
                   <td className="border p-2">
                     <button
-                      className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700"
+                      className="bg-red1 text-white px-2 py-1 rounded hover:bg-red2"
                       onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
                     >
                       -
                     </button>
                     <span className="mx-2">{item.quantity}</span>
                     <button
-                      className="bg-green-600 text-white px-2 py-1 rounded hover:bg-green-700"
+                      className="bg-green1 text-white px-2 py-1 rounded hover:bg-green2"
                       onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
                     >
                       +
@@ -74,7 +73,7 @@ const CartPage: React.FC = () => {
                   <td className="border p-2">${(item.price * item.quantity).toFixed(2)}</td>
                   <td className="border p-2">
                     <button
-                      className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700"
+                      className="bg-red1 text-white px-2 py-1 rounded hover:bg-red2"
                       onClick={() => removeFromCart(item.id)}
                     >
                       Remove
@@ -88,7 +87,7 @@ const CartPage: React.FC = () => {
             Total Price: ${cartItems.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2)}
           </div>
           <button
-            className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            className="mt-4 bg-secondary text-white px-4 py-2 rounded hover:bg-tertiary"
             onClick={handleCheckout}
           >
             Checkout
