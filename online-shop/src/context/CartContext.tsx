@@ -5,7 +5,7 @@ interface Product {
   id: number;
   title: string;
   price: number;
-  images: string[];
+  image: string;
 }
 
 interface CartItem extends Product {

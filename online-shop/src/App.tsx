@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import ProductListingPage from './pages/ProductListingPage';
 import ProductDetailPage from './pages/ProductDetailPage'; 
+import ProductCategoryPage from './pages/ProductCategoryPage'; 
 import CartPage from './pages/CartPage';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
@@ -23,10 +24,12 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/products" element={<ProductListingPage />} />
-            <Route path="/products/:id" element={<ProductDetailPage />} /> 
+            <Route path="/products/:categoryName" element={<ProductListingPage/>} /> 
+            <Route path="/details/:id" element={<ProductDetailPage />} /> 
             <Route path="/cart" element={<CartPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/categories" element={<ProductCategoryPage />} /> 
           </Routes>
         </main>
         <Footer />

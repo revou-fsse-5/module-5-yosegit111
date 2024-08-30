@@ -47,9 +47,9 @@ const CartPage: React.FC = () => {
             <tbody>
               {cartItems.map(item => (
                 <tr key={item.id}>
-                  <td className="border p-2">
-                    <img
-                      src={item.images[0]} // Use the first image from the array
+                  <td className="border p-2 align-center mx-auto">
+                    <img className="w-72"
+                      src={item.image} // Use the first image from the array
                       alt={item.title}
                     />
                   </td>

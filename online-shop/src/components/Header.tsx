@@ -15,10 +15,11 @@ const Header: React.FC = () => {
   return (
     <header className="bg-white shadow p-4">
       <div className="container mx-auto flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold text-tertiary">CakeShop</Link>
+        <Link to="/" className="text-2xl font-bold text-tertiary">AnythingShop</Link>
         <nav className="flex space-x-8">  {/* Added space between links */}
           <Link to="/" className="text-secondary hover:text-tertiary">Home</Link>
           <Link to="/products" className="text-secondary hover:text-tertiary">Product Catalogue</Link>
+          <Link to="/Categories" className="text-secondary hover:text-tertiary">Product Categories</Link>
           <Link to="/cart" className="text-secondary hover:text-tertiary">Cart</Link>
           <Link to="/login" className="text-secondary hover:text-tertiary mr-2">Register or Log In</Link>
         </nav>

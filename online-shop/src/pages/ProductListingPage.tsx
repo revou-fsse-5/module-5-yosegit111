@@ -1,44 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useCart } from '../context/CartContext';
-import { Link } from 'react-router-dom';
-import ProductDetailPage from './ProductDetailPage';
-
-interface Category {
-  id: number;
-  name: string;
-}
+import { Link, useParams } from 'react-router-dom';
 
 interface Product {
   id: number;
   title: string;
   price: number;
-  images: string[];
-  category: Category;
-  description: string; // Added description field
+  image: string;
+  category: string;
+  description: string;
 }
 
 const ProductListingPage: React.FC = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const productsPerPage = 20;
   const { addToCart } = useCart();
-
-  // Words to filter out from product titles
-  const excludedWords = ["My", "Product", "Peras", "Software", "sql"];
+  const { categoryName } = useParams<{ categoryName?: string }>(); // Get the category name from the URL
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('https://api.escuelajs.co/api/v1/categories');
+        const response = await fetch('https://fakestoreapi.com/products/categories');
         const data = await response.json();
-        // Filter categories to show only the required ones
-        const filteredCategories = data.filter((category: Category) =>
-          ["Clothes", "Electronics", "Shoes", "Miscellaneous"].includes(category.name)
-        );
-        setCategories(filteredCategories);
+        setCategories(data);
       } catch (error) {
         console.error('Error fetching categories:', error);
       }
@@ -46,18 +34,10 @@ const ProductListingPage: React.FC = () => {
 
     const fetchProducts = async () => {
       try {
-        const response = await fetch('https://api.escuelajs.co/api/v1/products');
+        const response = await fetch('https://fakestoreapi.com/products');
         const data = await response.json();
-        // Filter out products based on title
-        const filteredProducts = data.filter((product: Product) =>
-          !excludedWords.some(word => product.title.includes(word))
-        );
-        // Further filter products based on required categories
-        const categoryFilteredProducts = filteredProducts.filter((product: Product) =>
-          ["Clothes", "Electronics", "Shoes", "Miscellaneous"].includes(product.category.name)
-        );
-        setProducts(categoryFilteredProducts);
-        setFilteredProducts(categoryFilteredProducts); // Initially show all filtered products
+        setProducts(data);
+        setFilteredProducts(data); // Initially show all products
       } catch (error) {
         console.error('Error fetching products:', error);
       }
@@ -67,15 +47,36 @@ const ProductListingPage: React.FC = () => {
     fetchProducts();
   }, []);
 
-  const filterByCategory = (categoryId: number | null) => {
-    setSelectedCategory(categoryId);
+  // useEffect(() => {
+  //   if (categoryName) {
+  //     filterByCategory(categoryName); // Filter products by category if categoryName is in the URL
+  //   }
+  // }, [categoryName, products]);
+
+  // const filterByCategory = (category: string | null) => {
+  //   setSelectedCategory(category);
+  //   setCurrentPage(1); // Reset to first page
+  //   if (category === null) {
+  //     setFilteredProducts(products);
+  //   } else {
+  //     setFilteredProducts(products.filter(product => product.category === category));
+  //   }
+  // };
+  const filterByCategory = useCallback((category: string | null) => {
+    setSelectedCategory(category);
     setCurrentPage(1); // Reset to first page
-    if (categoryId === null) {
+    if (category === null) {
       setFilteredProducts(products);
     } else {
-      setFilteredProducts(products.filter(product => product.category.id === categoryId));
+      setFilteredProducts(products.filter(product => product.category === category));
     }
-  };
+  }, [products]);
+
+  useEffect(() => {
+    if (categoryName) {
+      filterByCategory(categoryName); // Filter products by category if categoryName is in the URL
+    }
+  }, [categoryName, products, filterByCategory]);
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
@@ -104,11 +105,11 @@ const ProductListingPage: React.FC = () => {
         </button>
         {categories.map((category) => (
           <button
-            key={category.id}
-            className={`py-2 px-4 rounded ${selectedCategory === category.id ? 'bg-primary text-white' : 'bg-gray-200 text-secondary hover:text-white'}`}
-            onClick={() => filterByCategory(category.id)}
+            key={category}
+            className={`py-2 px-4 rounded ${selectedCategory === category ? 'bg-primary text-white' : 'bg-gray-200 text-secondary hover:text-white'}`}
+            onClick={() => filterByCategory(category)}
           >
-            {category.name}
+            {category}
           </button>
         ))}
       </div>
@@ -118,7 +119,7 @@ const ProductListingPage: React.FC = () => {
         {currentProducts.map((product) => (
           <div key={product.id} className="border border-secondary rounded-lg overflow-hidden shadow-lg bg-white p-4 w-72">
             <img
-              src={product.images[0]}
+              src={product.image}
               alt={product.title}
               className="w-full h-48 object-cover mb-4"
               onError={() => handleImageError(product.id)}
@@ -135,7 +136,7 @@ const ProductListingPage: React.FC = () => {
               >
                 Add to Cart
               </button>
-              <Link to={`/products/${product.id}`}>
+              <Link to={`/details/${product.id}`}>
                 <button className="w-full bg-gray-700 text-white py-2 px-4 rounded hover:bg-gray-800 transition-colors duration-300">
                   Show Details
                 </button>

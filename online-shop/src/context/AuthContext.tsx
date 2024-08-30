@@ -4,10 +4,10 @@ interface User {
   username: string;
   email: string;
   password: string;
-  address: string;
+  street: string;
   country: string;
   city: string;
-  birthDate: string;
+  phone: string;
 }
 
 interface AuthContextType {
@@ -24,16 +24,36 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [user, setUser] = useState<{ email: string } | null>(null);
 
   const login = async (email: string, password: string) => {
-    const registeredUser = JSON.parse(localStorage.getItem(email) || 'null');
-  
-    if (!registeredUser) {
-      throw new Error('User not found');
-    }
-  
-    if (registeredUser.password === password) {
-      setUser({ email });
-    } else {
-      throw new Error('Invalid email or password');
+    try {
+      // Fetch users from API
+      const response = await fetch('https://fakestoreapi.com/users');
+      const users: User[] = await response.json();
+
+      // Check local storage for recently registered users
+      const localUser = localStorage.getItem(email);
+      const registeredUser = localUser ? JSON.parse(localUser) : users.find((u) => u.email === email);
+
+      if (!registeredUser) {
+        throw new Error('User not found');
+      }
+
+      // Validate the password
+      const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{5,}$/;
+      if (!passwordRegex.test(password)) {
+        throw new Error('Password must contain at least 5 characters, one letter, one number, and one special character');
+      }
+
+      if (registeredUser.password === password) {
+        setUser({ email });
+      } else {
+        throw new Error('Invalid email or password');
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error('Failed to log in: ' + error.message);
+      } else {
+        throw new Error('Failed to log in: An unknown error occurred');
+      }
     }
   };
 
@@ -42,6 +62,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const register = (newUser: User) => {
+    // Validate the password before saving the user
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{5,}$/;
+    if (!passwordRegex.test(newUser.password)) {
+      alert('Password must contain at least 5 characters, one letter, one number, and one special character');
+      return;
+    }
+
     if (!localStorage.getItem(newUser.email)) {
       localStorage.setItem(newUser.email, JSON.stringify(newUser));
       alert('Registration successful!');
