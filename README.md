@@ -1,4 +1,5 @@
-Hi I created an Online Shop called AnythingShop, where you can buy anything
+Hi I created an Online Shop called AnythingShop, where you can buy anything. You can visit my project here: https://milestone-2-yosegit111.vercel.app/
+
 <img width="1207" alt="image" src="https://github.com/user-attachments/assets/42b6ee2c-1cf8-4e4c-9ddb-f939b7d8c344">
 
 I created this shop by first creating the skeleton based off of what the task require: Home Page, Product Catalogue, Cart, and Register and Log In function. 
