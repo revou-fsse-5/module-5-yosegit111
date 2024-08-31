@@ -55,3 +55,4 @@ For this, I utilize AuthContext, where it tracks both existing users fetched fro
 That's all about my website. Unfortunately I had difficulty deploying as I'm still unsure about the deployment method and some files located oddly (for example I have some package.json files both inside and outside of online-shop folder).
 But I'll fix that as soon as possible!
 
+Testing README!
