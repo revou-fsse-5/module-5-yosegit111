@@ -1,7 +1,7 @@
 {
   "name": "online-store",
   "version": "1.0.0",
-  "homepage": "https://revou-fsse-5.github.io/milestone-2-yosegit111/online-shop",
+  "homepage": "https://revou-fsse-5.github.io/milestone-2-yosegit111/",
   "private": false,
   "dependencies": {
     "@headlessui/react": "^2.1.3",
