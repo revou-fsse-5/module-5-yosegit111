@@ -61,27 +61,27 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setUser(null);
   };
 
-  const register = (newUser: User) => {
-    // Validate the password before saving the user
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{5,}$/;
-    if (!passwordRegex.test(newUser.password)) {
-      alert('Password must contain at least 5 characters, one letter, one number, and one special character');
-      return;
-    }
-
-    if (!localStorage.getItem(newUser.email)) {
-      localStorage.setItem(newUser.email, JSON.stringify(newUser));
-      alert('Registration successful!');
-    } else {
-      alert('Email already registered!');
-    }
-  };
-
   return (
     <AuthContext.Provider value={{ isLoggedIn: !!user, user, login, logout, register }}>
       {children}
     </AuthContext.Provider>
   );
+};
+
+export const register = (newUser: User) => {
+  // Validate the password before saving the user
+  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{5,}$/;
+  if (!passwordRegex.test(newUser.password)) {
+    alert('Password must contain at least 5 characters, one letter, one number, and one special character');
+    return;
+  }
+
+  if (!localStorage.getItem(newUser.email)) {
+    localStorage.setItem(newUser.email, JSON.stringify(newUser));
+    alert('Registration successful!');
+  } else {
+    alert('Email already registered!');
+  }
 };
 
 export const useAuth = () => {
