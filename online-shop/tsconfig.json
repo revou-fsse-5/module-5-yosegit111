@@ -13,6 +13,8 @@
     "resolveJsonModule": true,                 // Allows importing JSON modules
     "isolatedModules": true,                   // Ensures all files can be safely transpiled independently
     "noEmit": true,                            // Disables emitting of output files (useful for type checking only)
+    "types": ["jest", "jest-fetch-mock"],
+    "typeRoots": ["./node_modules/@types", "./src/types"],
     "lib": [
       "dom",
       "dom.iterable",
