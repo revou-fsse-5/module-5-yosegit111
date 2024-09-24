@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",  // Changed from es5 to es6
     "lib": [
       "dom",
       "dom.iterable",
@@ -18,15 +18,15 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "baseUrl": ".",
+    "baseUrl": ".",  // Base URL set to project root
     "paths": {
       "@/*": [
-        "src/*"
+        "src/*"  // Aligns with your src folder structure
       ]
     },
     "plugins": [
       {
-        "name": "next"
+        "name": "next"  // Next.js plugin for TypeScript
       }
     ]
   },

@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useCart } from '../src/context/CartContext'; // Import the Cart Context
+import { useCart } from '../../src/context/CartContext'; // Import the Cart Context
 
 interface Product {
   id: number;

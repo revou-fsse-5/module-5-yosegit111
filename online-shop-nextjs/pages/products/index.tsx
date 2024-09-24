@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useCart } from '../../src/context/CartContext'; // Import Cart Context
 
 interface Product {
   id: number;
@@ -10,6 +11,7 @@ interface Product {
 
 const ProductListingPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const { addToCart } = useCart(); // Destructure addToCart
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -31,8 +33,14 @@ const ProductListingPage: React.FC = () => {
             <h2 className="text-xl font-bold">{product.title}</h2>
             <p>${product.price}</p>
             <Link href={`/products/${product.id}`}>
-              <p> Show Details </p>
+              <p>Show Details</p>
             </Link>
+            <button
+              className="bg-blue-500 text-white py-2 px-4 rounded mt-2"
+              onClick={() => addToCart(product)}
+            >
+              Add to Cart
+            </button>
           </div>
         ))}
       </div>
