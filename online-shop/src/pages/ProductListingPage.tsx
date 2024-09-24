@@ -1,165 +1,67 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useCart } from '../context/CartContext';
-import { Link, useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-interface Product {
-  id: number;
-  title: string;
-  price: number;
+interface Category {
+  name: string;
   image: string;
-  category: string;
-  description: string;
 }
 
-const ProductListingPage: React.FC = () => {
-  const [categories, setCategories] = useState<string[]>([]);
-  const [products, setProducts] = useState<Product[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const productsPerPage = 20;
-  const { addToCart } = useCart();
-  const { categoryName } = useParams<{ categoryName?: string }>(); // Get the category name from the URL
+const ProductCategoryPage: React.FC = () => {
+  const [categories, setCategories] = useState<Category[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch('https://fakestoreapi.com/products/categories');
-        const data = await response.json();
-        setCategories(data);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-      }
-    };
-
-    const fetchProducts = async () => {
+    const fetchCategoriesWithImages = async () => {
       try {
         const response = await fetch('https://fakestoreapi.com/products');
-        const data = await response.json();
-        setProducts(data);
-        setFilteredProducts(data); // Initially show all products
+        const products = await response.json();
+
+        // Map categories with their first product's image
+        const categoryMap: Record<string, string> = {};
+        products.forEach((product: any) => {
+          if (!categoryMap[product.category]) {
+            categoryMap[product.category] = product.image;
+          }
+        });
+
+        const categories = Object.keys(categoryMap).map((category) => ({
+          name: category,
+          image: categoryMap[category],
+        }));
+
+        setCategories(categories);
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error('Error fetching categories with images:', error);
       }
     };
 
-    fetchCategories();
-    fetchProducts();
+    fetchCategoriesWithImages();
   }, []);
-
-  // useEffect(() => {
-  //   if (categoryName) {
-  //     filterByCategory(categoryName); // Filter products by category if categoryName is in the URL
-  //   }
-  // }, [categoryName, products]);
-
-  // const filterByCategory = (category: string | null) => {
-  //   setSelectedCategory(category);
-  //   setCurrentPage(1); // Reset to first page
-  //   if (category === null) {
-  //     setFilteredProducts(products);
-  //   } else {
-  //     setFilteredProducts(products.filter(product => product.category === category));
-  //   }
-  // };
-  const filterByCategory = useCallback((category: string | null) => {
-    setSelectedCategory(category);
-    setCurrentPage(1); // Reset to first page
-    if (category === null) {
-      setFilteredProducts(products);
-    } else {
-      setFilteredProducts(products.filter(product => product.category === category));
-    }
-  }, [products]);
-
-  useEffect(() => {
-    if (categoryName) {
-      filterByCategory(categoryName); // Filter products by category if categoryName is in the URL
-    }
-  }, [categoryName, products, filterByCategory]);
-
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-
-  // Get current products for the current page
-  const indexOfLastProduct = currentPage * productsPerPage;
-  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
-
-  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
-
-  const handleImageError = (productId: number) => {
-    setFilteredProducts(filteredProducts.filter(product => product.id !== productId));
-  };
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-8 text-secondary">Our Products</h1>
+      <h1 className="text-3xl font-bold mb-8 text-center">Product Categories</h1>
 
-      {/* Category Buttons */}
-      <div className="mb-8 flex justify-center gap-2 ">
-        <button
-          className={`py-2 px-4 rounded ${selectedCategory === null ? 'bg-primary text-white' : 'bg-gray-200 text-secondary'}`}
-          onClick={() => filterByCategory(null)}
-        >
-          All
-        </button>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {categories.map((category) => (
-          <button
-            key={category}
-            className={`py-2 px-4 rounded ${selectedCategory === category ? 'bg-primary text-white' : 'bg-gray-200 text-secondary hover:text-white'}`}
-            onClick={() => filterByCategory(category)}
+          <div
+            key={category.name}
+            className="relative h-64 rounded-lg overflow-hidden shadow-lg cursor-pointer"
+            onClick={() => navigate(`/products/${category.name}`)} // Navigate to ProductListingPage with category
           >
-            {category}
-          </button>
-        ))}
-      </div>
-
-      {/* Product Grid */}
-      <div className='flex flex-wrap gap-4'>
-        {currentProducts.map((product) => (
-          <div key={product.id} className="border border-secondary rounded-lg overflow-hidden shadow-lg bg-white p-4 w-72">
             <img
-              src={product.image}
-              alt={product.title}
-              className="w-full h-48 object-cover mb-4"
-              onError={() => handleImageError(product.id)}
+              src={category.image}
+              alt={category.name}
+              className="w-full h-full object-cover"
             />
-            <h2 className="text-xl font-bold text-secondary mb-2">{product.title}</h2>
-            <p className="text-primary font-semibold mb-4">${product.price}</p>
-            <div className="flex gap-2" >
-              <button
-                className="w-full bg-primary text-white py-2 px-4 rounded hover:bg-secondary transition-colors duration-300"
-                onClick={() => {
-                  alert('Product is added to cart!');
-                  addToCart(product);
-                }}
-              >
-                Add to Cart
-              </button>
-              <Link to={`/details/${product.id}`}>
-                <button className="w-full bg-gray-700 text-white py-2 px-4 rounded hover:bg-gray-800 transition-colors duration-300">
-                  Show Details
-                </button>
-              </Link>
+            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+              <h2 className="text-2xl font-bold text-white uppercase">{category.name}</h2>
             </div>
           </div>
-        ))}
-      </div>
-
-      {/* Pagination Controls */}
-      <div className="mt-8 flex justify-center gap-3">
-        {[...Array(totalPages)].map((_, index) => (
-          <button
-            key={index + 1}
-            className={`py-2 px-4 rounded ${currentPage === index + 1 ? 'bg-primary text-white' : 'bg-gray-200 text-secondary'}`}
-            onClick={() => paginate(index + 1)}
-          >
-            {index + 1}
-          </button>
         ))}
       </div>
     </div>
   );
 };
 
-export default ProductListingPage;
+export default ProductCategoryPage;

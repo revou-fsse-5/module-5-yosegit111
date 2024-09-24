@@ -1,30 +1,29 @@
 export { };
-export default {
+module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
   collectCoverage: true,
-  collectCoverageFrom: [
-    '<rootDir>/src/**/*.{ts,tsx}', // Correct the path for collecting coverage
-    '!<rootDir>/src/**/*.d.ts',
-    '!**/vendor/**'
-  ],
+  collectCoverageFrom: ['src/*/.{ts,tsx}', '!src/*/.d.ts',
+    '!*/vendor/*'],
   coverageDirectory: 'coverage',
+//   testEnvironment: 'jsdom',
   transform: {
-    '^.+\\.tsx?$': 'ts-jest', 
+    '^.+\\.tsx?$': 'ts-jest', ".(ts|tsx)": "ts-jest"
   },
+
   coveragePathIgnorePatterns: [
     "/node_modules/",
-    "/coverage/",
+    "/coverage",
     "package.json",
     "package-lock.json",
     "reportWebVitals.ts",
     "setupTests.ts",
     "index.tsx"
   ],
-  setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'], // Adjust path to setupTests.ts
-  setupFiles: ['jest-localstorage-mock'], // Only setup localStorage here
-  moduleFileExtensions: ['ts', 'tsx', 'js'],
+  setupFilesAfterEnv: ['<rootDir>/src/test/setupTests.ts', 'jest-fetch-mock'],
+  setupFiles: ['jest-localstorage-mock','jest-fetch-mock'],
+  moduleFileExtensions: ['ts', 'tsx', 'js'], // Add the file extensions to be used in tests
   moduleNameMapper: {
-    '\\.(css|less|scss|sass)$': 'identity-obj-proxy' // For mocking CSS modules
+    '\\.(css|less|scss|sass)$': 'identity-obj-proxy'
   },
 };
