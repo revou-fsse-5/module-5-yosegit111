@@ -31,7 +31,7 @@ const ProductListingPage: React.FC = () => {
             <h2 className="text-xl font-bold">{product.title}</h2>
             <p>${product.price}</p>
             <Link href={`/products/${product.id}`}>
-              <a className="text-blue-500">Show Details</a>
+              <p> Show Details </p>
             </Link>
           </div>
         ))}

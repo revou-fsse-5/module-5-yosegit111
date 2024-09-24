@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useCart } from '../src/context/CartContext'; // Import the Cart Context
 
 interface Product {
   id: number;
@@ -12,6 +13,7 @@ interface Product {
 const ProductDetailPage: React.FC = () => {
   const { id } = useRouter().query;
   const [product, setProduct] = useState<Product | null>(null);
+  const { addToCart } = useCart(); // Destructure addToCart from Cart Context
 
   useEffect(() => {
     if (id) {
@@ -32,6 +34,12 @@ const ProductDetailPage: React.FC = () => {
       <h1 className="text-3xl font-bold mb-4">{product.title}</h1>
       <p className="text-xl font-semibold mb-4">${product.price}</p>
       <p className="mb-4">{product.description}</p>
+      <button
+        className="bg-blue-500 text-white py-2 px-4 rounded"
+        onClick={() => addToCart(product)}
+      >
+        Add to Cart
+      </button>
     </div>
   );
 };
